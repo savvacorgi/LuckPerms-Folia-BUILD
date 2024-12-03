@@ -1,0 +1,39 @@
+name: Build LuckPerms
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Установить репозиторий
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Шаг 2: Настроить Java 17
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      # Шаг 3: Сборка проекта с помощью Gradle
+      - name: Build with Gradle
+        run: |
+          ./gradlew build
+
+      # Шаг 4: Сохранить артефакты сборки
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: luckperms-build
+          path: |
+            loader/build/libs/
+            build/libs/
