@@ -1,39 +1,40 @@
-name: Build LuckPerms
+name: Build and Publish JAR
 
 on:
-  push:
+  push:  # Запуск при пушах в любые ветки
     branches:
-      - main
-  pull_request:
+      - '**'
+  pull_request:  # Запуск для всех pull request
     branches:
-      - main
+      - '**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Шаг 1: Установить репозиторий
-      - name: Checkout code
+      # Шаг 1: Клонирование репозитория
+      - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      # Шаг 2: Настроить Java 17
+      # Шаг 2: Установка Java 17
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
-          java-version: 17
-          distribution: temurin
+          distribution: 'temurin'
+          java-version: '17'
 
       # Шаг 3: Сборка проекта с помощью Gradle
-      - name: Build with Gradle
+      - name: Build project
         run: |
           ./gradlew build
 
-      # Шаг 4: Сохранить артефакты сборки
+      # Шаг 4: Сохранение артефактов сборки
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: luckperms-build
+          name: build-artifacts
           path: |
-            loader/build/libs/
-            build/libs/
+            build/libs/*.jar
