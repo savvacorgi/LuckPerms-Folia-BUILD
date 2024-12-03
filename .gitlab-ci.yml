@@ -1,0 +1,22 @@
+image: gradle:7.6-jdk17 # use java 17
+
+stages:
+  - build
+
+build_luckperms:
+  stage: build
+  script:
+    - echo "Cloning LuckPerms repository..."
+    - git clone https://github.com/LuckPerms/LuckPerms.git
+    - cd LuckPerms
+    - echo "Setting up environment for Java 17..."
+    - java -version
+    - echo "Starting the build process..."
+    - ./gradlew build
+  artifacts:
+    paths:
+      - LuckPerms/loader/build/libs/
+      - LuckPerms/build/libs/
+    expire_in: 30 days
+  only:
+    - main  
