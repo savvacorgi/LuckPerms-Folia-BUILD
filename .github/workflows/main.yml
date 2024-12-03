@@ -1,10 +1,10 @@
-name: Build and Publish JAR
+name: Build JAR
 
 on:
-  push:  # Запуск при пушах в любые ветки
+  push:
     branches:
       - '**'
-  pull_request:  # Запуск для всех pull request
+  pull_request:
     branches:
       - '**'
 
@@ -13,28 +13,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Шаг 1: Клонирование репозитория
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Отключаем shallow clone
 
-      # Шаг 2: Установка Java 17
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # Шаг 3: Сборка проекта с помощью Gradle
-      - name: Build project
-        run: |
-          ./gradlew build
-
-      # Шаг 4: Сохранение артефактов сборки
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifacts
-          path: |
-            build/libs/*.jar
+      - name: Run build with Gradle
+        run: ./gradlew build --warning-mode all
